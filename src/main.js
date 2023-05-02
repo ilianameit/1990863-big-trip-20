@@ -1,9 +1,5 @@
 import TripView from './view/trip-view.js';
 import FilterView from './view/filters-view.js';
-import SortView from './view/sorting-view.js';
-import EditFormView from './view/edit-form-view.js';
-import ListView from './view/list-view.js';
-import PointView from './view/point-view.js';
 import ListPresenter from './presenter/board-presenter.js';
 
 import {render} from './render.js';
