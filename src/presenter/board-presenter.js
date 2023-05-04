@@ -4,7 +4,7 @@ import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
 import {render} from '../render.js';
 
-export default class ListPresenter {
+export default class BoardPresenter {
   listComponent = new ListView();
 
 

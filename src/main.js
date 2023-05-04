@@ -1,6 +1,6 @@
 import TripView from './view/trip-view.js';
 import FilterView from './view/filters-view.js';
-import ListPresenter from './presenter/board-presenter.js';
+import BoardPresenter from './presenter/board-presenter.js';
 
 import {render} from './render.js';
 import {RenderPosition} from './render.js';
@@ -13,10 +13,9 @@ const siteBodyElement = siteMainElement.querySelector('.trip-events');
 
 render(new TripView(), siteHeaderTripElement, RenderPosition.AFTERBEGIN);
 render(new FilterView(), siteHeaderFilterElement);
-const listPresenter = new ListPresenter({listContainer: siteBodyElement});
+const boardPresenter = new BoardPresenter({listContainer: siteBodyElement});
 
 
-listPresenter.init();
-//const siteListElement = siteMainElement.querySelector('.trip-events__list');
+boardPresenter.init();
 
 

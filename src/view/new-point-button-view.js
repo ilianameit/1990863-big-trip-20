@@ -1,13 +1,15 @@
 
 import {createElement} from '../render.js';
 
-function createLoadingView() {
-  return '<p class="trip-events__msg">Loading...</p>';
+function createNewPointButtonView() {
+  return `
+  <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>
+  `;
 }
 
-export default class LoadingView {
+export default class NewPointButtonView {
   getTemplate() {
-    return createLoadingView();
+    return createNewPointButtonView();
   }
 
   getElement() {

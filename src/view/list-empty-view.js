@@ -1,7 +1,7 @@
 
 import {createElement} from '../render.js';
 
-function createLoadingView() {
+function createListEmptyView() {
   return `
   <p class="trip-events__msg">Click New Event to create your first point</p>
   <!--
@@ -14,9 +14,9 @@ function createLoadingView() {
   `;
 }
 
-export default class LoadingView {
+export default class ListEmptyView {
   getTemplate() {
-    return createLoadingView();
+    return createListEmptyView();
   }
 
   getElement() {
