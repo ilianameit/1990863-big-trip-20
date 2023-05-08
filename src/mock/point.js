@@ -95,7 +95,7 @@ const points = [
   {
     id: '10',
     basePrice: getRandomPrice(),
-    dateFrom: '2022-07-5T12:00:00.845Z',
+    dateFrom: '2022-07-05T12:00:00.845Z',
     dateTo: '2022-07-10T12:30:13.375Z',
     destination: getRandomArrayElement(destination),
     isFavorite: false,
