@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import View from './view.js';
 
 function createFilterView() {
   return `
@@ -28,19 +28,8 @@ function createFilterView() {
 `;
 }
 
-export default class FilterView {
+export default class FilterView extends View{
   getTemplate() {
     return createFilterView();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

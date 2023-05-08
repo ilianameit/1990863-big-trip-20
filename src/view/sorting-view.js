@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import View from './view.js';
 
 function createSortView() {
   return `
@@ -30,19 +30,8 @@ function createSortView() {
   </form>`;
 }
 
-export default class SortView {
+export default class SortView extends View{
   getTemplate() {
     return createSortView();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

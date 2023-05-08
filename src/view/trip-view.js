@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import View from './view.js';
 
 function createTripView() {
   return `
@@ -13,20 +13,10 @@ function createTripView() {
   </section>`;
 }
 
-export default class TripView {
+export default class TripView extends View{
   getTemplate() {
     return createTripView();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
 

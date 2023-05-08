@@ -1,5 +1,5 @@
 
-import {createElement} from '../render.js';
+import View from './view.js';
 
 function createListEmptyView() {
   return `
@@ -14,20 +14,9 @@ function createListEmptyView() {
   `;
 }
 
-export default class ListEmptyView {
+export default class ListEmptyView extends View{
   getTemplate() {
     return createListEmptyView();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
