@@ -15,7 +15,7 @@ const siteBodyElement = siteMainElement.querySelector('.trip-events');
 render(new TripView(), siteHeaderTripElement, RenderPosition.AFTERBEGIN);
 render(new FilterView(), siteHeaderFilterElement);
 const pointsModel = new PointModel();
-const boardPresenter = new BoardPresenter({listContainer: siteBodyElement}, pointsModel);
+const boardPresenter = new BoardPresenter({listContainer: siteBodyElement, pointsModel});
 
 
 boardPresenter.init();
