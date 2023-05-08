@@ -1,5 +1,5 @@
 
-import {createElement} from '../render.js';
+import View from './view.js';
 
 function createNewPointButtonView() {
   return `
@@ -7,20 +7,9 @@ function createNewPointButtonView() {
   `;
 }
 
-export default class NewPointButtonView {
+export default class NewPointButtonView extends View{
   getTemplate() {
     return createNewPointButtonView();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
