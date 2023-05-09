@@ -28,5 +28,16 @@ function formatToHtmlAttr(date){
   return humanizeDateFormat(DATE_HTML_ATTR, date);
 }
 
+function differenceTime(timeFrom, timeTo){
+  const diff = dayjs.duration(dayjs(timeTo).diff(dayjs(timeFrom))).$d;
+  return (
+    `${diff.years ? `${diff.years }Y ` : ''}` +
+    `${diff.months ? `${diff.months}Mth ` : ''}` +
+    `${diff.days ? `${diff.days }D ` : ''}` +
+    `${diff.hours ? `${diff.hours }H ` : ''}` +
+    `${diff.minutes ? `${diff.minutes }M` : ''}`
+  );
+}
 
-export {getRandomArrayElement, getRandomPrice, humanizeDate, humanizeTime, formatToHtmlAttr};
+
+export {getRandomArrayElement, getRandomPrice, humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime};

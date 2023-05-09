@@ -1,6 +1,6 @@
 
 import View from './view.js';
-import {humanizeDate, humanizeTime, formatToHtmlAttr} from '../utils.js';
+import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime} from '../utils.js';
 
 function createPointView(point) {
   const {id, basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
@@ -17,7 +17,7 @@ function createPointView(point) {
         &mdash;
         <time class="event__end-time" datetime="${formatToHtmlAttr(dateTo)}T${humanizeTime(dateTo)}">${humanizeTime(dateTo)}</time>
       </p>
-      <p class="event__duration">30M</p>
+      <p class="event__duration">${differenceTime(dateFrom, dateTo)}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
