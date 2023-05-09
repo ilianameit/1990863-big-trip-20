@@ -26,7 +26,7 @@ const points = [
     id: '03',
     basePrice: getRandomPrice(),
     dateFrom: '2020-03-01T10:00:00.845Z',
-    dateTo: '2020-03-01T11:30:13.375Z',
+    dateTo: '2026-03-01T11:30:13.375Z',
     destination: getRandomArrayElement(destination),
     isFavorite: true,
     offers: [2,4],
