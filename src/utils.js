@@ -1,11 +1,17 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
+
 dayjs.extend(duration);
 
-const DATE_FORMAT = 'MMM DD';
-const TIME_FORMAT = 'HH:mm';
-const DATE_HTML_ATTR = 'YYYY-MM-DD';
+const Format = {
+  DATE : 'MMM DD',
+  TIME : 'HH:mm',
+  HTML_ATTR: 'YYYY-MM-DD',
+  MONTH : 'MMM',
+  DAY : 'D',
+  EDIT_DATE : 'DD/MM/YY',
+};
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -18,26 +24,61 @@ function humanizeDateFormat(format, date) {
   return date ? dayjs(date).format(format) : '';
 }
 function humanizeDate(date){
-  return humanizeDateFormat(DATE_FORMAT, date);
+  return humanizeDateFormat(Format.DATE, date);
 }
 function humanizeTime(date){
-  return humanizeDateFormat(TIME_FORMAT, date);
+  return humanizeDateFormat(Format.TIME, date);
 }
 
 function formatToHtmlAttr(date){
-  return humanizeDateFormat(DATE_HTML_ATTR, date);
+  return humanizeDateFormat(Format.HTML_ATTR, date);
+}
+
+function humanizeEditTime(date){
+  return humanizeDateFormat(Format.EDIT_DATE, date);
 }
 
 function differenceTime(timeFrom, timeTo){
-  const diff = dayjs.duration(dayjs(timeTo).diff(dayjs(timeFrom))).$d;
+  const xFrom = dayjs(timeFrom);
+  const xTo = dayjs(timeTo);
+  const dif = dayjs.duration(xTo.diff(xFrom)).$d;
   return (
-    `${diff.years ? `${diff.years }Y ` : ''}` +
-    `${diff.months ? `${diff.months}Mth ` : ''}` +
-    `${diff.days ? `${diff.days }D ` : ''}` +
-    `${diff.hours ? `${diff.hours }H ` : ''}` +
-    `${diff.minutes ? `${diff.minutes }M` : ''}`
+    `${dif.days ? `${dif.days }D ` : ''}` +
+    `${dif.hours ? `${dif.hours }H ` : ''}` +
+    `${dif.minutes ? `${dif.minutes }M` : ''}`
   );
 }
 
+function returnOfferType(type, allOffers){
+  if (!type) {
+    return allOffers;
+  } else {
+    return allOffers.find((offer) => offer.type === type).offers;
+  }
+}
 
-export {getRandomArrayElement, getRandomPrice, humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime};
+function returnCurrentOffers(type, arrayCurrentOffers, offers){
+  const typeObj = returnOfferType(type, offers);
+  const currentOffers = typeObj.filter((offer) =>
+    arrayCurrentOffers.includes(offer.id)
+  );
+  return currentOffers;
+}
+
+function upperFirstCase(word){
+  return (word[0].toUpperCase() + word.slice(1));
+}
+
+function getAllDestinations(destinations){
+  return destinations.map(({name}) => name);
+}
+
+function returnDestination(idDestination, allDestinations){
+  if (!idDestination) {
+    return '';
+  } else {
+    return allDestinations.find(({id}) => id === idDestination);
+  }
+}
+
+export {getRandomArrayElement, getRandomPrice, humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnOfferType, returnCurrentOffers, upperFirstCase, getAllDestinations, humanizeEditTime, returnDestination};
