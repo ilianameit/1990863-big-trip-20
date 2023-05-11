@@ -1,21 +1,44 @@
 
 import View from './view.js';
-import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime} from '../utils.js';
+import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnCurrentOffers, returnDestination} from '../utils.js';
 
-function createPointView(point) {
-  const {id, basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
+function createCurrentOffers(type, oselectedOffers, allOffers){
+  if(oselectedOffers) {
+    const offers = returnCurrentOffers(type, oselectedOffers, allOffers);
+    return offers.map((offer) =>
+      `<li class="event__offer">
+        <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </li>`
+    ).join('');
+  }
+  return '';
+}
+
+function createPointView(point, allOffers, allDestinations) {
+  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
+  const offersCurrent = createCurrentOffers(type, offers, allOffers);
   return `<li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime="${formatToHtmlAttr(dateFrom)}">${humanizeDate(dateFrom)}</time>
+    <time class="event__date" datetime="${formatToHtmlAttr(dateFrom)}">
+      ${humanizeDate(dateFrom)}
+    </time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type} ${destination.name}</h3>
+    <h3 class="event__title">${type} ${returnDestination(destination, allDestinations).name}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="${formatToHtmlAttr(dateFrom)}T${humanizeTime(dateFrom)}">${humanizeTime(dateFrom)}</time>
+        <time
+          class="event__start-time"
+          datetime="${formatToHtmlAttr(dateFrom)}T${humanizeTime(dateFrom)}">
+            ${humanizeTime(dateFrom)}
+        </time>
         &mdash;
-        <time class="event__end-time" datetime="${formatToHtmlAttr(dateTo)}T${humanizeTime(dateTo)}">${humanizeTime(dateTo)}</time>
+        <time class="event__end-time" datetime="${formatToHtmlAttr(dateTo)}T${humanizeTime(dateTo)}">
+          ${humanizeTime(dateTo)}
+        </time>
       </p>
       <p class="event__duration">${differenceTime(dateFrom, dateTo)}</p>
     </div>
@@ -24,11 +47,7 @@ function createPointView(point) {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      <li class="event__offer">
-        <span class="event__offer-title">Order Uber</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">20</span>
-      </li>
+      ${offersCurrent}
     </ul>
     <button class="event__favorite-btn event__favorite-btn--${isFavorite ? 'active' : ''}" type="button">
       <span class="visually-hidden">Add to favorite</span>
@@ -44,13 +63,15 @@ function createPointView(point) {
 }
 
 export default class PointView extends View{
-  constructor({point}){
+  constructor({point, allOffers, allDestinations}){
     super();
     this.point = point;
+    this.allOffers = allOffers;
+    this.allDestinations = allDestinations;
   }
 
   getTemplate() {
-    return createPointView(this.point);
+    return createPointView(this.point, this.allOffers, this.allDestinations);
   }
 
 }
