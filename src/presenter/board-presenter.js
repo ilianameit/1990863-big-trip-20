@@ -15,15 +15,14 @@ export default class BoardPresenter {
 
   init() {
     this.listPoints = [...this.pointsModel.getPoints()];
-
+    this.listOffers = this.pointsModel.getOffers();
+    this.listDestination = this.pointsModel.getDestination();
     render(new SortView(), this.listContainer);
     render(this.listComponent, this.listContainer);
-    render(new EditFormView(), this.listComponent.getElement());
+    render(new EditFormView({point: this.listPoints[0], allOffers:  this.listOffers, allDestinations: this.listDestination}), this.listComponent.getElement());
 
-    for (let i = 0; i < this.listPoints.length; i++) {
-      render(new PointView({point: this.listPoints[i]}), this.listComponent.getElement());
+    for (let i = 1; i < this.listPoints.length; i++) {
+      render(new PointView({point: this.listPoints[i], allOffers:  this.listOffers, allDestinations: this.listDestination}), this.listComponent.getElement());
     }
-
-
   }
 }
