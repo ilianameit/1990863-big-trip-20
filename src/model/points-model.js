@@ -1,4 +1,6 @@
 import { getRandomPoint } from '../mock/point';
+import { offers } from '../mock/offers';
+import {destination} from '../mock/destination';
 const POINT_COUNT = 10;
 
 export default class PointModel {
@@ -6,5 +8,13 @@ export default class PointModel {
 
   getPoints(){
     return this.points;
+  }
+
+  getOffers(){
+    return offers;
+  }
+
+  getDestination(){
+    return destination;
   }
 }
