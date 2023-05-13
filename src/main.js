@@ -5,7 +5,6 @@ import TripPresenter from './presenter/trip-presenter.js';
 
 //import {RenderPosition} from './render.js';
 
-
 const siteMainElement = document.querySelector('.page-body');
 const siteHeaderTripElement = siteMainElement.querySelector('.trip-main');
 const siteHeaderFilterElement = siteMainElement.querySelector('.trip-controls__filters');
