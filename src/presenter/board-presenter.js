@@ -2,7 +2,7 @@ import ListView from '../view/list-view.js';
 import SortView from '../view/sorting-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
-import { render } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 
 export default class BoardPresenter {
   #listContainer = null;
@@ -33,7 +33,40 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point){
-    const pointComponent = new PointView({point, allOffers:  this.#listOffers, allDestinations: this.#listDestination});
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const pointComponent = new PointView({
+      point,
+      allOffers:  this.#listOffers,
+      allDestinations: this.#listDestination,
+      onEditClick: () => {
+        replaceCardToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const editComponent = new EditFormView({
+      point,
+      allOffers:  this.#listOffers,
+      allDestinations: this.#listDestination,
+      onFormSubmit: () => {
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replaceCardToForm() {
+      replace(editComponent, pointComponent);
+    }
+    function replaceFormToCard() {
+      replace(pointComponent, editComponent);
+    }
     render(pointComponent, this.#listComponent.element);
   }
 }
