@@ -3,8 +3,6 @@ import BoardPresenter from './presenter/board-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import TripPresenter from './presenter/trip-presenter.js';
 
-//import {RenderPosition} from './render.js';
-
 const siteMainElement = document.querySelector('.page-body');
 const siteHeaderTripElement = siteMainElement.querySelector('.trip-main');
 const siteHeaderFilterElement = siteMainElement.querySelector('.trip-controls__filters');

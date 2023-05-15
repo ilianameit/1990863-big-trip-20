@@ -1,6 +1,6 @@
 
-import View from './view.js';
 import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnCurrentOffers, returnDestination} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createCurrentOffers(type, oselectedOffers, allOffers){
   if(oselectedOffers) {
@@ -62,16 +62,19 @@ function createPointView(point, allOffers, allDestinations) {
 </li>`;
 }
 
-export default class PointView extends View{
+export default class PointView extends AbstractView{
+  #point = null;
+  #allOffers = null;
+  #allDestinations = null;
   constructor({point, allOffers, allDestinations}){
     super();
-    this.point = point;
-    this.allOffers = allOffers;
-    this.allDestinations = allDestinations;
+    this.#point = point;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
   }
 
-  getTemplate() {
-    return createPointView(this.point, this.allOffers, this.allDestinations);
+  get template() {
+    return createPointView(this.#point, this.#allOffers, this.#allDestinations);
   }
 
 }

@@ -1,4 +1,4 @@
-const destination = [
+const destinations = [
   {
     id: 1,
     description: 'Amsterdam, is a beautiful city, a true asian pearl, with crowded streets.',
@@ -56,4 +56,4 @@ const destination = [
       },
     ]
   }];
-export {destination};
+export {destinations};
