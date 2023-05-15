@@ -1,4 +1,4 @@
-import View from './view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createTripView() {
   return `
@@ -13,8 +13,8 @@ function createTripView() {
   </section>`;
 }
 
-export default class TripView extends View{
-  getTemplate() {
+export default class TripView extends AbstractView{
+  get template() {
     return createTripView();
   }
 

@@ -1,5 +1,5 @@
-import View from './view.js';
 import { returnOfferType, upperFirstCase, getAllDestinations, humanizeEditTime, humanizeTime, returnDestination} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_POINT = {
   basePrice: '',
@@ -156,15 +156,18 @@ function createEditFormView(point, allOffers, allDestinations) {
   `;
 }
 
-export default class EditFormView extends View{
+export default class EditFormView extends AbstractView{
+  #point = null;
+  #allOffers = null;
+  #allDestinations = null;
   constructor({point = BLANK_POINT, allOffers, allDestinations}) {
     super();
-    this.point = point;
-    this.allOffers = allOffers;
-    this.allDestinations = allDestinations;
+    this.#point = point;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
   }
 
-  getTemplate() {
-    return createEditFormView(this.point, this.allOffers, this.allDestinations);
+  get template() {
+    return createEditFormView(this.#point, this.#allOffers, this.#allDestinations);
   }
 }
