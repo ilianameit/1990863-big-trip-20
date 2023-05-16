@@ -2,7 +2,7 @@ import ListView from '../view/list-view.js';
 import SortView from '../view/sorting-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
-import { render, replace, remove } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 
 export default class BoardPresenter {
   #listContainer = null;
