@@ -1,4 +1,4 @@
-import { returnOfferType, upperFirstCase, getAllDestinations, humanizeEditTime, humanizeTime, returnDestination} from '../utils.js';
+import { returnOfferType, upperFirstCase, humanizeEditTime, humanizeTime} from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_POINT = {
@@ -24,8 +24,7 @@ function createOffersTypeList(typeList){
 }
 function createDestinationList(destinations){
   if(destinations){
-    const destinationsName = getAllDestinations(destinations);
-    return destinationsName.map((destinationName) =>
+    return destinations.map((destinationName) =>
       `
         <option value="${destinationName}"></option>
       `
@@ -53,13 +52,13 @@ function createOffers(type, allOffers, selectedOffers){
   return offersView;
 }
 
-function createDestinationTemplate(destination){
+function createDestinationTemplate(descriptionInfo, pictures){
   const photosTape = () => {
-    if(destination.pictures.length > 0){
+    if(pictures.length > 0){
       return `
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${destination.pictures.map(({ src, description }) => `
+          ${pictures.map(({ src, description }) => `
             <img class="event__photo" src="${src}" alt="${description}">
           `)}
         </div>
@@ -67,12 +66,12 @@ function createDestinationTemplate(destination){
       `;
     } return('');
   };
-  if(destination.description !== null && destination.description !== undefined){
+  if(descriptionInfo !== null && descriptionInfo !== undefined){
     return `
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">
-          ${destination.description}
+          ${descriptionInfo}
         </p>
 
           ${photosTape()}
@@ -82,16 +81,16 @@ function createDestinationTemplate(destination){
   return('');
 }
 
-function createEditFormView(point, allOffers, allDestinations) {
-  const {basePrice, dateFrom, dateTo, destination, offers, type} = point;
+function createEditFormView(point, allOffers, destinationsList, destination) {
+  const {basePrice, dateFrom, dateTo, offers, type} = point;
+  const {name, description, pictures} = destination;
 
   const listOffers = createOffersTypeList(allOffers);
-  const destinationList = createDestinationList(allDestinations);
+  const destinationList = createDestinationList(destinationsList);
 
   const offersOfType = createOffers(type, allOffers, offers);
+  const destinationTemplate = createDestinationTemplate(description, pictures);
 
-  const destinationInfo = returnDestination(destination, allDestinations);
-  const destinationTemplate = createDestinationTemplate(destinationInfo);
   return `
   <li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -115,7 +114,7 @@ function createEditFormView(point, allOffers, allDestinations) {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationInfo.name}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
         <datalist id="destination-list-1">
           ${destinationList}
         </datalist>
@@ -159,21 +158,23 @@ function createEditFormView(point, allOffers, allDestinations) {
 export default class EditFormView extends AbstractView{
   #point = null;
   #allOffers = null;
-  #allDestinations = null;
+  #destinationsList = null;
   #handleFormSubmit = null;
-  constructor({point = BLANK_POINT, allOffers, allDestinations, onFormSubmit}) {
+  #destination = null;
+  constructor({point = BLANK_POINT, allOffers, destinationsList, destination, onFormSubmit}) {
     super();
     this.#point = point;
     this.#allOffers = allOffers;
-    this.#allDestinations = allDestinations;
+    this.#destinationsList = destinationsList;
+    this.#destination = destination;
     this.#handleFormSubmit = onFormSubmit;
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    //доделать cancel
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler,true);
   }
 
   get template() {
-    return createEditFormView(this.#point, this.#allOffers, this.#allDestinations);
+    return createEditFormView(this.#point, this.#allOffers, this.#destinationsList, this.#destination);
   }
 
   #formSubmitHandler = (evt) => {

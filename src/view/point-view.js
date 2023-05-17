@@ -1,11 +1,10 @@
 
-import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnCurrentOffers, returnDestination} from '../utils.js';
+import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime,} from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createCurrentOffers(type, oselectedOffers, allOffers){
-  if(oselectedOffers) {
-    const offers = returnCurrentOffers(type, oselectedOffers, allOffers);
-    return offers.map((offer) =>
+function createCurrentOffers(selectedOffers){
+  if(selectedOffers) {
+    return selectedOffers.map((offer) =>
       `<li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
@@ -16,9 +15,11 @@ function createCurrentOffers(type, oselectedOffers, allOffers){
   return '';
 }
 
-function createPointView(point, allOffers, allDestinations) {
-  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
-  const offersCurrent = createCurrentOffers(type, offers, allOffers);
+function createPointView(point, offers, destination) {
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
+
+  const offersCurrent = createCurrentOffers(offers);
+
   return `<li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime="${formatToHtmlAttr(dateFrom)}">
@@ -27,7 +28,7 @@ function createPointView(point, allOffers, allDestinations) {
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type} ${returnDestination(destination, allDestinations).name}</h3>
+    <h3 class="event__title">${type} ${destination.name}</h3>
     <div class="event__schedule">
       <p class="event__time">
         <time
@@ -64,22 +65,21 @@ function createPointView(point, allOffers, allDestinations) {
 
 export default class PointView extends AbstractView{
   #point = null;
-  #allOffers = null;
-  #allDestinations = null;
+  #currentOffers = null;
+  #destination = null;
   #handleEditClick = null;
-  constructor({point, allOffers, allDestinations, onEditClick}){
+  constructor({point, currentOffers, destination, onEditClick}){
     super();
     this.#point = point;
-    this.#allOffers = allOffers;
-    this.#allDestinations = allDestinations;
+    this.#currentOffers = currentOffers;
+    this.#destination = destination;
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
-
   }
 
   get template() {
-    return createPointView(this.#point, this.#allOffers, this.#allDestinations);
+    return createPointView(this.#point, this.#currentOffers, this.#destination);
   }
 
   #editClickHandler = (evt) => {
