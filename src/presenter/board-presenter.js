@@ -6,6 +6,7 @@ import ListEmptyView from '../view/list-empty-view.js';
 import { render, replace, RenderPosition } from '../framework/render.js';
 import { getAllDestinations, returnCurrentOffers, returnDestination } from '../utils/point.js';
 
+
 export default class BoardPresenter {
   #listContainer = null;
   #pointsModel = null;
@@ -29,6 +30,7 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point, destination, allDestinations, destinationsList, currentOffers, allOffers){
+
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -52,6 +54,7 @@ export default class BoardPresenter {
       allOffers,
       destinationsList,
       destination,
+
       onFormSubmit: () => {
         replaceFormToCard();
         document.removeEventListener('keydown', escKeyDownHandler);
@@ -83,7 +86,8 @@ export default class BoardPresenter {
       const allOffers = this.#listOffers;
       const currentOffers = returnCurrentOffers(point.type, point.offers, allOffers);
 
-      this.#renderPoint(point, destination, allDestinations, destinationsList, currentOffers, allOffers);
+
     }
+    render(pointComponent, this.#listComponent.element);
   }
 }

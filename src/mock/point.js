@@ -1,3 +1,4 @@
+
 import {getRandomArrayElement, getRandomPrice} from '../utils/common.js';
 import { destinations } from './destinations.js';
 
