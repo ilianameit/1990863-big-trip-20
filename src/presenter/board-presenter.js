@@ -3,7 +3,7 @@ import SortView from '../view/sorting-view.js';
 import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
-import { render, replace, remove, RenderPosition } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 import { getAllDestinations, returnCurrentOffers, returnDestination } from '../utils/point.js';
 
 export default class BoardPresenter {
