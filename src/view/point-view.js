@@ -1,5 +1,4 @@
-
-import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime,} from '../utils/common.js';
+import {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime } from '../utils/point.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createCurrentOffers(selectedOffers){

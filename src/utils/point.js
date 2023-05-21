@@ -1,7 +1,11 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
 dayjs.extend(duration);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 const Format = {
   DATE : 'MMM DD',
@@ -12,32 +16,25 @@ const Format = {
   EDIT_DATE : 'DD/MM/YY',
 };
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-function getRandomPrice() {
-  return Math.floor(Math.random() * 100);
-}
-
 function humanizeDateFormat(format, date) {
   return date ? dayjs(date).format(format) : '';
 }
-function humanizeDate(date){
+function humanizeDate(date) {
   return humanizeDateFormat(Format.DATE, date);
 }
-function humanizeTime(date){
+function humanizeTime(date) {
   return humanizeDateFormat(Format.TIME, date);
 }
 
-function formatToHtmlAttr(date){
+function formatToHtmlAttr(date) {
   return humanizeDateFormat(Format.HTML_ATTR, date);
 }
 
-function humanizeEditTime(date){
+function humanizeEditTime(date) {
   return humanizeDateFormat(Format.EDIT_DATE, date);
 }
 
-function differenceTime(timeFrom, timeTo){
+function differenceTime(timeFrom, timeTo) {
   const xFrom = dayjs(timeFrom);
   const xTo = dayjs(timeTo);
   const dif = dayjs.duration(xTo.diff(xFrom)).$d;
@@ -48,7 +45,7 @@ function differenceTime(timeFrom, timeTo){
   );
 }
 
-function returnOfferType(type, allOffers){
+function returnOfferType(type, allOffers) {
   if (!type) {
     return allOffers;
   } else {
@@ -56,7 +53,7 @@ function returnOfferType(type, allOffers){
   }
 }
 
-function returnCurrentOffers(type, arrayCurrentOffers, offers){
+function returnCurrentOffers(type, arrayCurrentOffers, offers) {
   const typeObj = returnOfferType(type, offers);
   const currentOffers = typeObj.filter((offer) =>
     arrayCurrentOffers.includes(offer.id)
@@ -64,15 +61,11 @@ function returnCurrentOffers(type, arrayCurrentOffers, offers){
   return currentOffers;
 }
 
-function upperFirstCase(word){
-  return (word[0].toUpperCase() + word.slice(1));
-}
-
-function getAllDestinations(destinations){
+function getAllDestinations(destinations) {
   return destinations.map(({name}) => name);
 }
 
-function returnDestination(idDestination, allDestinations){
+function returnDestination(idDestination, allDestinations) {
   if (!idDestination) {
     return '';
   } else {
@@ -80,4 +73,18 @@ function returnDestination(idDestination, allDestinations){
   }
 }
 
-export {getRandomArrayElement, getRandomPrice, humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnOfferType, returnCurrentOffers, upperFirstCase, getAllDestinations, humanizeEditTime, returnDestination};
+function isPointFuture(dateFrom) {
+  return dayjs(dateFrom).isAfter(dayjs());
+}
+
+function isPointPresent(dateFrom, dateTo) {
+  const isFromBefore = dayjs(dateFrom).isSameOrBefore(dayjs());
+  const isToAfter = dayjs(dateTo).isSameOrAfter(dayjs());
+  return (isFromBefore && isToAfter === true);
+}
+
+function isPointPast(dateTo) {
+  return dayjs(dateTo).isBefore(dayjs());
+}
+
+export {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnOfferType, returnCurrentOffers, getAllDestinations, humanizeEditTime, returnDestination, isPointFuture, isPointPresent, isPointPast };

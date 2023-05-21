@@ -1,4 +1,5 @@
-import { returnOfferType, upperFirstCase, humanizeEditTime, humanizeTime} from '../utils/common.js';
+import { upperFirstCase } from '../utils/common.js';
+import { returnOfferType, humanizeEditTime, humanizeTime } from '../utils/point.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const BLANK_POINT = {
@@ -137,7 +138,10 @@ function createEditFormView(point, allOffers, destinationsList, destination) {
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
@@ -170,7 +174,7 @@ export default class EditFormView extends AbstractView{
     this.#handleFormSubmit = onFormSubmit;
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler,true);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
   get template() {
