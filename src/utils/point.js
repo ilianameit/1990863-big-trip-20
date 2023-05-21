@@ -40,8 +40,8 @@ function differenceTime(timeFrom, timeTo) {
   const dif = dayjs.duration(xTo.diff(xFrom)).$d;
   return (
     `${dif.days ? `${dif.days }D ` : ''}` +
-    `${dif.hours ? `${dif.hours }H ` : ''}` +
-    `${dif.minutes ? `${dif.minutes }M` : ''}`
+    `${dif.hours ? `${dif.hours }H ` : '00H'}` +
+    `${dif.minutes ? `${dif.minutes }M` : '00M'}`
   );
 }
 
@@ -87,4 +87,31 @@ function isPointPast(dateTo) {
   return dayjs(dateTo).isBefore(dayjs());
 }
 
-export {humanizeDate, humanizeTime, formatToHtmlAttr, differenceTime, returnOfferType, returnCurrentOffers, getAllDestinations, humanizeEditTime, returnDestination, isPointFuture, isPointPresent, isPointPast };
+function calculatePrice(points) {
+  return points.reduce((accumulator, basePrice) => accumulator + basePrice.basePrice, 0);
+}
+
+function returnUniqDestinations(points, destinations) {
+  const uniqDestinations = new Set();
+  points.map(({destination}) => uniqDestinations.add(returnDestination(destination, destinations).name));
+  return Array.from(uniqDestinations.keys());
+}
+
+export {
+  Format,
+  humanizeDateFormat,
+  humanizeDate,
+  humanizeTime,
+  formatToHtmlAttr,
+  differenceTime,
+  returnOfferType,
+  returnCurrentOffers,
+  getAllDestinations,
+  humanizeEditTime,
+  returnDestination,
+  isPointFuture,
+  isPointPresent,
+  isPointPast,
+  calculatePrice,
+  returnUniqDestinations
+};
