@@ -86,8 +86,8 @@ export default class BoardPresenter {
       const allOffers = this.#listOffers;
       const currentOffers = returnCurrentOffers(point.type, point.offers, allOffers);
 
+      this.#renderPoint(point, destination, allDestinations, destinationsList, currentOffers, allOffers);
 
     }
-    render(pointComponent, this.#listComponent.element);
   }
 }
