@@ -1,4 +1,5 @@
-import {getRandomArrayElement, getRandomPrice} from '../utils.js';
+
+import {getRandomArrayElement, getRandomPrice} from '../utils/common.js';
 import { destinations } from './destinations.js';
 
 const points = [

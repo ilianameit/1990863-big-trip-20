@@ -3,18 +3,16 @@ import { render } from '../framework/render.js';
 
 export default class FiltersPresenter {
   #filterContainer = null;
-  #pointsModel = null;
+  #filters = null;
 
-  #points = [];
-
-  constructor({filterContainer, pointsModel}) {
+  constructor({filterContainer, filters}) {
     this.#filterContainer = filterContainer;
-    this.#pointsModel = pointsModel;
+    this.#filters = filters;
   }
 
   init() {
-    this.#points = [...this.#pointsModel.points];
 
-    render(new FilterView(), this.#filterContainer);
+
+    render(new FilterView({filters: this.#filters}), this.#filterContainer);
   }
 }
