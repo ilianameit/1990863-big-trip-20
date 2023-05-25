@@ -55,5 +55,25 @@ const destinations = [
         description: 'Geneva 03'
       },
     ]
-  }];
+  },
+  {
+    id: 4,
+    description: 'qqqq.',
+    name: 'qqqqqq',
+    pictures: [
+      {
+        src: 'https://loremflickr.com/248/152?random=4',
+        description: 'qqq 01'
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=5',
+        description: 'qqq 02'
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=6',
+        description: 'qqq 03'
+      },
+    ]
+  },
+];
 export {destinations};
