@@ -1,10 +1,8 @@
 import ListView from '../view/list-view.js';
 import SortView from '../view/sorting-view.js';
-import EditFormView from '../view/edit-form-view.js';
-import PointView from '../view/point-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
-import { render, replace, RenderPosition } from '../framework/render.js';
-import { getAllDestinations, returnCurrentOffers, returnDestination } from '../utils/point.js';
+import { render, RenderPosition } from '../framework/render.js';
+import PointPresenter from './point-presenter.js';
 
 
 export default class BoardPresenter {
@@ -12,6 +10,8 @@ export default class BoardPresenter {
   #pointsModel = null;
 
   #listComponent = new ListView();
+  #listEmptyComponent = new ListEmptyView();
+  #sortComponent = new SortView();
 
   #listPoints = [];
   #listOffers = null;
@@ -29,65 +29,40 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
-  #renderPoint(point, destination, allDestinations, destinationsList, currentOffers, allOffers){
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const pointComponent = new PointView({
-      point,
-      currentOffers,
-      destination,
-      onEditClick: () => {
-        replaceCardToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#listComponent.element,
+      allDestinations: this.#listDestination,
+      allOffers: this.#listOffers
     });
+    pointPresenter.init(point);
+  }
 
-    const editComponent = new EditFormView({
-      point,
-      allOffers,
-      destinationsList,
-      destination,
+  #renderListEmpty() {
+    render(this.#listEmptyComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
+  }
 
-      onFormSubmit: () => {
-        replaceFormToCard();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
+  #renderSort() {
+    render(this.#sortComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
+  }
 
-    function replaceCardToForm() {
-      replace(editComponent, pointComponent);
-    }
-    function replaceFormToCard() {
-      replace(pointComponent, editComponent);
-    }
-    render(pointComponent, this.#listComponent.element);
+  #renderPoints(points) {
+    points.forEach((point) =>
+      this.#renderPoint(point)
+    );
+  }
+
+  #renderPointList() {
+    render(this.#listComponent, this.#listContainer, RenderPosition.BEFOREEND);
   }
 
   #renderBoard(){
     if(!this.#listPoints.length) {
-      render(new ListEmptyView(), this.#listContainer, RenderPosition.AFTERBEGIN);
+      this.#renderListEmpty();
       return;
     }
-    render(new SortView(), this.#listContainer, RenderPosition.AFTERBEGIN);
-    render(this.#listComponent, this.#listContainer);
-
-    for (let i = 0; i < this.#listPoints.length; i++) {
-      const point = this.#listPoints[i];
-      const allDestinations = this.#listDestination;
-      const destinationsList = getAllDestinations(allDestinations);
-      const destination = returnDestination(point.destination, allDestinations);
-      const allOffers = this.#listOffers;
-      const currentOffers = returnCurrentOffers(point.type, point.offers, allOffers);
-
-      this.#renderPoint(point, destination, allDestinations, destinationsList, currentOffers, allOffers);
-
-    }
+    this.#renderSort();
+    this.#renderPointList();
+    this.#renderPoints(this.#listPoints);
   }
 }
