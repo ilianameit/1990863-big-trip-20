@@ -10,4 +10,13 @@ function upperFirstCase(word){
   return (word[0].toUpperCase() + word.slice(1));
 }
 
-export {getRandomArrayElement, getRandomPrice, upperFirstCase};
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export {
+  getRandomArrayElement,
+  getRandomPrice,
+  upperFirstCase,
+  updateItem
+};

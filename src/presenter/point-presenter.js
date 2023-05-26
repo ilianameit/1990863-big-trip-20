@@ -1,6 +1,6 @@
 import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import { getAllDestinations, returnCurrentOffers, returnDestination } from '../utils/point.js';
 
 
@@ -13,10 +13,14 @@ export default class PointPresenter {
   #allOffers = null;
   #point = null;
 
-  constructor({pointListContainer, allDestinations, allOffers}) {
+  #handleDataChange = null;
+
+  constructor({pointListContainer, allDestinations, allOffers, onDataChange}) {
     this.#pointListContainer = pointListContainer;
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
+
+    this.#handleDataChange = onDataChange;
   }
 
   init(point) {
@@ -25,6 +29,9 @@ export default class PointPresenter {
     const destinationsList = getAllDestinations(this.#allDestinations);
     const destination = returnDestination(this.#point.destination, this.#allDestinations);
     const currentOffers = returnCurrentOffers(this.#point.type, this.#point.offers, this.#allOffers);
+
+    const prevPointComponent = this.#pointComponent;
+    const prevTaskEditComponent = this.#editPointComponent;
 
     this.#pointComponent = new PointView({
       point: this.#point,
@@ -38,10 +45,30 @@ export default class PointPresenter {
       allOffers: this.#allOffers,
       destinationsList,
       destination,
-      onFormSubmit: this.#handleFormSubmit
+      onFormSubmit: this.#handleFormSubmit,
+      onCancelClick: this.#handleFormCancel
     });
 
-    render(this.#pointComponent, this.#pointListContainer);
+    if(prevPointComponent === null || prevTaskEditComponent === null) {
+      render(this.#pointComponent, this.#pointListContainer);
+      return;
+    }
+
+    if(this.#pointListContainer.contains(prevPointComponent.element)) {
+      replace(this.#pointComponent, prevPointComponent);
+    }
+
+    if(this.#pointListContainer.contains(prevTaskEditComponent.element)) {
+      replace(this.#editPointComponent, prevTaskEditComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevTaskEditComponent);
+  }
+
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#editPointComponent);
   }
 
   #replaceCardToForm() {
@@ -66,7 +93,16 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (point) => {
+    this.handleDataChange(point);
     this.#replaceFormToCard();
   };
+
+  #handleFormCancel = () => {
+    this.#replaceFormToCard();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+  }
 }

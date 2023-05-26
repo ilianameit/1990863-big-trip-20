@@ -3,6 +3,7 @@ import SortView from '../view/sorting-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import { render, RenderPosition } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 
 export default class BoardPresenter {
@@ -16,6 +17,8 @@ export default class BoardPresenter {
   #listPoints = [];
   #listOffers = null;
   #listDestination = null;
+  #pointPresenters = new Map();
+
   constructor({listContainer, pointsModel}) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
@@ -36,11 +39,18 @@ export default class BoardPresenter {
       allOffers: this.#listOffers
     });
     pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter)
   }
 
   #renderListEmpty() {
     render(this.#listEmptyComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#listPoints = updateItem(this.#listPoints, updatedPoint);
+    console.log(this.#listPoints);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
 
   #renderSort() {
     render(this.#sortComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
@@ -50,6 +60,11 @@ export default class BoardPresenter {
     points.forEach((point) =>
       this.#renderPoint(point)
     );
+  }
+
+  #clearPointList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   }
 
   #renderPointList() {
