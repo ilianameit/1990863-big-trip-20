@@ -32,25 +32,30 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
+  #handlePointChange = (updatedPoint) => {
+    this.#listPoints = updateItem(this.#listPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#listComponent.element,
       allDestinations: this.#listDestination,
-      allOffers: this.#listOffers
+      allOffers: this.#listOffers,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point);
-    this.#pointPresenters.set(point.id, pointPresenter)
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderListEmpty() {
     render(this.#listEmptyComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
   }
-
-  #handlePointChange = (updatedPoint) => {
-    this.#listPoints = updateItem(this.#listPoints, updatedPoint);
-    console.log(this.#listPoints);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
-  };
 
   #renderSort() {
     render(this.#sortComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
