@@ -97,6 +97,10 @@ function returnUniqDestinations(points, destinations) {
   return Array.from(uniqDestinations.keys());
 }
 
+function durationDates(dateA, dateB) {
+  return dayjs.duration(dayjs(dateB).diff(dayjs(dateA))).$ms;
+}
+
 export {
   Format,
   humanizeDateFormat,
@@ -113,5 +117,6 @@ export {
   isPointPresent,
   isPointPast,
   calculatePrice,
-  returnUniqDestinations
+  returnUniqDestinations,
+  durationDates
 };
