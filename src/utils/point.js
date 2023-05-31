@@ -38,9 +38,10 @@ function differenceTime(timeFrom, timeTo) {
   const xFrom = dayjs(timeFrom);
   const xTo = dayjs(timeTo);
   const dif = dayjs.duration(xTo.diff(xFrom)).$d;
+  const countDay = dif.months || dif.years ? xTo.diff(xFrom, 'day') : dif.days;
   return (
-    `${dif.days ? `${dif.days }D ` : ''}` +
-    `${dif.hours ? `${dif.hours }H ` : '00H'}` +
+    `${countDay ? `${countDay }D ` : ''}` +
+    `${dif.hours ? `${dif.hours }H ` : '00H '}` +
     `${dif.minutes ? `${dif.minutes }M` : '00M'}`
   );
 }
