@@ -1,5 +1,5 @@
 import { upperFirstCase } from '../utils/common.js';
-import { returnOfferType, humanizeEditTime, humanizeTime, returnDestination } from '../utils/point.js';
+import { returnOfferType, humanizeEditTime, humanizeTime } from '../utils/point.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const BLANK_POINT = {
