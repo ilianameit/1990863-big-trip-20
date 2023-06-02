@@ -52,6 +52,7 @@ export default class PointPresenter {
     this.#editPointComponent = new EditFormView({
       point: this.#point,
       allOffers: this.#allOffers,
+      allDestinations: this.#allDestinations,
       destinationsList,
       destination,
       onFormSubmit: this.#handleFormSubmit,
@@ -82,6 +83,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editPointComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   }
@@ -102,6 +104,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editPointComponent.reset(this.#point);
       this.#replaceFormToCard();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
@@ -117,6 +120,7 @@ export default class PointPresenter {
   };
 
   #handleCancelClick = () => {
+    this.#editPointComponent.reset(this.#point);
     this.#replaceFormToCard();
   };
 
