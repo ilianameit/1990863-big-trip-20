@@ -168,8 +168,10 @@ export default class EditFormView extends AbstractStatefulView {
   #handleCancelClick = null;
   #destination = null;
   #allDestinations = null;
+
   #datepickerFrom = null;
   #datepickerTo = null;
+
   constructor({point = BLANK_POINT, allOffers, allDestinations, destinationsList, destination, onFormSubmit, onCancelClick}) {
     super();
     this._setState(EditFormView.parsePointToState(point));

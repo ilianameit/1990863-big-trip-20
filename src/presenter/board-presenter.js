@@ -7,6 +7,7 @@ import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
 import { sortPointsDay, sortPointsTime, sortPointsPrice } from '../utils/sort.js';
 
+
 export default class BoardPresenter {
   #listContainer = null;
   #pointsModel = null;
@@ -41,6 +42,7 @@ export default class BoardPresenter {
   #handlePointChange = (updatedPoint) => {
     this.#listPoints = updateItem(this.#listPoints, updatedPoint);
     this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
+
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -120,6 +122,7 @@ export default class BoardPresenter {
       this.#renderListEmpty();
       return;
     }
+
     this.#renderSort();
     this.#renderPointList();
     this.#renderPoints();
