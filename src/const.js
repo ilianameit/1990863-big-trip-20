@@ -15,8 +15,21 @@ const SortType = {
   OFFERS: 'offers'
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT', //событие обновление задачи
+  ADD_POINT: 'ADD_POINT',//событие добавление задачи
+  DELETE_POINT: 'DELETE_POINT',//событие удаление задачи
+};
+const UpdateType = { //изменения маленькие. большие
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 export {
   offersType,
   FilterType,
-  SortType
+  SortType,
+  UserAction,
+  UpdateType
 };
