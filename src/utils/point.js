@@ -88,8 +88,13 @@ function isPointPast(dateTo) {
   return dayjs(dateTo).isBefore(dayjs());
 }
 
-function calculatePrice(points) {
-  return points.reduce((accumulator, basePrice) => accumulator + basePrice.basePrice, 0);
+function calculatePrice(points, allOffers) {
+  return points.reduce((accumulator, point) => {
+    const offersCurrent = returnCurrentOffers(point.type, point.offers, allOffers);
+    const prices = offersCurrent.reduce((accumulatorPrice, {price}) => accumulatorPrice + price, 0);
+
+    return accumulator + point.basePrice + prices;
+  }, 0);
 }
 
 function returnUniqDestinations(points, destinations) {
