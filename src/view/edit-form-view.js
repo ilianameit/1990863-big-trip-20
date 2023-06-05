@@ -279,8 +279,9 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #setDatepicker() {
+    const [from, to] = [...this.element.querySelectorAll('.event__input--time')];
     this.#datepickerFrom = flatpickr(
-      this.element.querySelector('#event-start-time'),
+      from,
       {
         enableTime: true,
         'time_24hr': true,
@@ -294,7 +295,7 @@ export default class EditFormView extends AbstractStatefulView {
     );
 
     this.#datepickerTo = flatpickr(
-      this.element.querySelector('#event-end-time'),
+      to,
       {
         enableTime: true,
         'time_24hr': true,
