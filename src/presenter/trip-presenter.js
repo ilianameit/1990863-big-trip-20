@@ -10,6 +10,7 @@ export default class TripPresenter {
 
   #points = [];
   #listDestination = [];
+  #listOffers = [];
 
   constructor({tripContainer, pointsModel}) {
     this.#tripContainer = tripContainer;
@@ -19,6 +20,7 @@ export default class TripPresenter {
   init() {
     this.#points = [...this.#pointsModel.points];
     this.#listDestination = [...this.#pointsModel.destinations];
+    this.#listOffers = [...this.#pointsModel.offers];
 
     this.#renderTrip();
   }
@@ -29,7 +31,7 @@ export default class TripPresenter {
     }
     const points = this.#points;
     const tripInfo = {
-      price: calculatePrice(points),
+      price: calculatePrice(points, this.#listOffers),
       destinations: returnUniqDestinations(points, this.#listDestination),
       monthStart: humanizeDateFormat(Format.MONTH, points[0].dateFrom),
       dayStart: humanizeDateFormat(Format.DAY, points[0].dateFrom),
