@@ -65,14 +65,17 @@ export default class BoardPresenter {
   };
 
   #handleModelEvent = (updateType, data) => { // реагирование на изменение модели
-    console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
+        this.#clearBoard();
+        this.#renderBoard();
         break;
       case UpdateType.MAJOR:
+        this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
         break;
     }
   };
@@ -98,10 +101,8 @@ export default class BoardPresenter {
       return;
     }
     this.#currentSortType = sortType;
-    remove(this.#sortComponent);
-    this.#renderSort();
-    this.#clearPointList();
-    this.#renderPointList();
+    this.#clearBoard();
+    this.#renderBoard();
   };
 
   #renderSort() {
@@ -118,23 +119,30 @@ export default class BoardPresenter {
     );
   }
 
-  #clearPointList() {
+  #clearBoard({resetSortType = false} = {}) {
+
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
-  }
 
-  #renderPointList() {
-    render(this.#listComponent, this.#listContainer, RenderPosition.BEFOREEND);
-    const points = this.points;
-    this.#renderPoints(points);
+    remove(this.#sortComponent);
+    remove(this.#listEmptyComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderBoard(){
-    if(!this.points.length) {
+    const points = this.points;
+
+    if(!points.length) {
       this.#renderListEmpty();
       return;
     }
+
     this.#renderSort();
-    this.#renderPointList();
+
+    render(this.#listComponent, this.#listContainer, RenderPosition.BEFOREEND);
+    this.#renderPoints(points);
   }
 }
