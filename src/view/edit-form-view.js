@@ -166,13 +166,14 @@ export default class EditFormView extends AbstractStatefulView {
   #destinationsList = null;
   #handleFormSubmit = null;
   #handleCancelClick = null;
+  #handleDeleteClick = null;
   #destination = null;
   #allDestinations = null;
 
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point = BLANK_POINT, allOffers, allDestinations, destinationsList, destination, onFormSubmit, onCancelClick}) {
+  constructor({point = BLANK_POINT, allOffers, allDestinations, destinationsList, destination, onFormSubmit, onCancelClick, onDeleteClick}) {
     super();
     this._setState(EditFormView.parsePointToState(point));
     this.#allOffers = allOffers;
@@ -181,6 +182,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.#destination = destination;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelClick = onCancelClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -215,6 +217,7 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersChangeHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.#setDatepicker();
   }
@@ -227,6 +230,11 @@ export default class EditFormView extends AbstractStatefulView {
   #cancelClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleCancelClick();
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditFormView.parseStateToPoint(this._state));
   };
 
   #offerTypeChangeHandler = (evt) => {
