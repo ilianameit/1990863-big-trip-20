@@ -57,7 +57,8 @@ export default class PointPresenter {
       destinationsList,
       destination,
       onFormSubmit: this.#handleFormSubmit,
-      onCancelClick: this.#handleCancelClick
+      onCancelClick: this.#handleCancelClick,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if(prevPointComponent === null || prevTaskEditComponent === null) {
@@ -117,7 +118,7 @@ export default class PointPresenter {
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
-      UserAction.UPDATE_TASK,
+      UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       point,
     );
@@ -131,7 +132,7 @@ export default class PointPresenter {
 
   #handleFavoriteClick = () => {
     this.#handleDataChange(
-      UserAction.UPDATE_TASK,
+      UserAction.UPDATE_POINT,
       UpdateType.PATCH,
       {...this.#point, isFavorite: !this.#point.isFavorite},
     );
