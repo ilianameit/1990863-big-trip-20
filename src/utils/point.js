@@ -88,23 +88,16 @@ function isPointPast(dateTo) {
   return dayjs(dateTo).isBefore(dayjs());
 }
 
-function calculatePrice(points, allOffers) {
-  return points.reduce((accumulator, point) => {
-    const offersCurrent = returnCurrentOffers(point.type, point.offers, allOffers);
-    const prices = offersCurrent.reduce((accumulatorPrice, {price}) => accumulatorPrice + price, 0);
-
-    return accumulator + point.basePrice + prices;
-  }, 0);
-}
-
-function returnUniqDestinations(points, destinations) {
-  const uniqDestinations = new Set();
-  points.map(({destination}) => uniqDestinations.add(returnDestination(destination, destinations).name));
-  return Array.from(uniqDestinations.keys());
-}
-
 function durationDates(dateA, dateB) {
   return dayjs.duration(dayjs(dateB).diff(dayjs(dateA))).$ms;
+}
+
+function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dayjs(dateB));
+}
+
+function isBasePriceEqual(priceA, priceB) {
+  return (priceA === null && priceB === null) || priceA === priceB;
 }
 
 export {
@@ -122,7 +115,7 @@ export {
   isPointFuture,
   isPointPresent,
   isPointPast,
-  calculatePrice,
-  returnUniqDestinations,
-  durationDates
+  durationDates,
+  isDatesEqual,
+  isBasePriceEqual
 };
