@@ -1,8 +1,8 @@
 import TripView from '../view/trip-view.js';
 import { RenderPosition, render } from '../framework/render.js';
-import { calculatePrice } from '../utils/point.js';
-import { returnUniqDestinations } from '../utils/point.js';
+import { calculatePrice, returnTripDestinations, returnUniqDestinations } from '../utils/trip.js';
 import { Format, humanizeDateFormat } from '../utils/point.js';
+import { sortPointsDay } from '../utils/sort.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -18,7 +18,7 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#points = [...this.#pointsModel.points];
+    this.#points = [...this.#pointsModel.points].sort(sortPointsDay);
     this.#listDestination = [...this.#pointsModel.destinations];
     this.#listOffers = [...this.#pointsModel.offers];
 
@@ -32,7 +32,8 @@ export default class TripPresenter {
     const points = this.#points;
     const tripInfo = {
       price: calculatePrice(points, this.#listOffers),
-      destinations: returnUniqDestinations(points, this.#listDestination),
+      uniqDestinations: returnUniqDestinations(points, this.#listDestination),
+      destinations: returnTripDestinations(points, this.#listDestination),
       monthStart: humanizeDateFormat(Format.MONTH, points[0].dateFrom),
       dayStart: humanizeDateFormat(Format.DAY, points[0].dateFrom),
       monthEnd:  humanizeDateFormat(Format.MONTH, points[points.length - 1].dateTo),
