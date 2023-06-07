@@ -1,15 +1,15 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createTitleDestinations(destinations) {
-  if(destinations.length <= 3) {
+function createTitleDestinations(destinations, uniqDestinations) {
+  if(destinations.length <= 3 || uniqDestinations.length <= 2){
     return destinations.map((destination, index) => {
       if(index === 0) {
         return destination;
       } else{
-        return ` &mdash; ${destination}`;
+        return `${destination !== uniqDestinations[0] && destination !== destinations[destinations.length - 1] && destination !== destinations[index - 1] || index === destinations.length - 1 ? `&mdash; ${destination}` : ''}`;
       }
     }).join('');
-  } else{
+  } else {
     return `${destinations[0]} &mdash; &#8230; &mdash; ${destinations[destinations.length - 1]}`;
   }
 }
@@ -24,9 +24,9 @@ function createInfoDate(tripInfo) {
 }
 
 function createTripView(points, tripInfo) {
-  const {price, destinations} = tripInfo;
+  const {price, destinations, uniqDestinations} = tripInfo;
 
-  const titlesDestinations = createTitleDestinations(destinations);
+  const titlesDestinations = createTitleDestinations(destinations, uniqDestinations);
   const infoDate = createInfoDate(tripInfo);
   return `
   <section class="trip-main__trip-info  trip-info">
