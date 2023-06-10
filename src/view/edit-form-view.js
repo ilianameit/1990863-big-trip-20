@@ -303,7 +303,6 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #dueDateFromChangeHandler = ([userDate]) => {
-    console.log(userDate)
     this.updateElement({
       dateFrom: userDate,
     });
