@@ -39,8 +39,6 @@ export default class TripPresenter {
     };
     this.#tripComponent = new TripView({ points, tripInfo});
 
-
-
     if (prevTripComponent === null) {
       this.#renderTrip();
       return;
