@@ -252,8 +252,27 @@ export default class EditFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditFormView.parseStateToPoint(this._state));
+    const validForm = this.#isValidDates([this._state.dateFrom, this._state.dateTo]);
+    if(validForm) {
+      this.#handleFormSubmit(EditFormView.parseStateToPoint(this._state));
+      return;
+    } this.#showPlaceholderDates();
+
   };
+
+  #isValidDates(values) {
+    return values.every((elem) => elem !== '' && elem !== undefined) ;
+  }
+
+  #showPlaceholderDates() {
+    const times = [...this.element.querySelectorAll('.event__input--time')];
+    times.map((time) => {
+      if(time.value){
+        time.removeAttribute('placeholder');
+        return;
+      } time.setAttribute('placeholder', 'заполните');
+    });
+  }
 
   #cancelClickHandler = (evt) => {
     evt.preventDefault();
@@ -343,7 +362,6 @@ export default class EditFormView extends AbstractStatefulView {
         onClose: this.#dueDateToChangeHandler,
       },
     );
-
   }
 
   static parsePointToState(point) {
