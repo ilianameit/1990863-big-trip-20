@@ -89,6 +89,21 @@ function createDestinationTemplate(descriptionInfo, pictures){
   }
   return('');
 }
+function createButtonsTemplate(isNewPoint) {
+  if(isNewPoint){
+    return `
+      <button class="event__reset-btn" type="reset">Cancel</button>
+    `;
+  } else {
+    return `
+      <button class="event__reset-btn" type="reset">Delete</button>
+
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
+    `;
+  }
+}
 
 function createEditFormView(point, allOffers, destinationsList, destination, isNewPoint) {
   const {basePrice, dateFrom, dateTo, offers, type} = point;
@@ -100,6 +115,7 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
 
   const offersOfType = createOffers(type, allOffers, offers);
   const destinationTemplate = createDestinationTemplate(description, pictures);
+  const buttonsTemplate = createButtonsTemplate(isNewPoint);
 
   return `
   <li class="trip-events__item">
@@ -132,10 +148,10 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${humanizeEditTime(dateFrom)} ${humanizeTime(dateFrom)} required">
+        <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${humanizeEditTime(dateFrom)}${humanizeTime(dateFrom)}" required>
         —
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${humanizeEditTime(dateTo)} ${humanizeTime(dateTo)} required">
+        <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${humanizeEditTime(dateTo)}${humanizeTime(dateTo)}" required>
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -143,15 +159,11 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
           <span class="visually-hidden">Price</span>
           €
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
-
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
+      ${buttonsTemplate}
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
@@ -224,7 +236,11 @@ export default class EditFormView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#cancelClickHandler);
+
+    const rollUpButton = this.element.querySelector('.event__rollup-btn');
+    if(rollUpButton) {
+      rollUpButton.addEventListener('click', this.#cancelClickHandler);
+    }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#offerTypeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
@@ -287,6 +303,7 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   #dueDateFromChangeHandler = ([userDate]) => {
+    console.log(userDate)
     this.updateElement({
       dateFrom: userDate,
     });
