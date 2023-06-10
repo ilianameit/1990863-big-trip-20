@@ -10,7 +10,13 @@ const BLANK_POINT = {
   dateTo: '',
   destination: '',
   offers: [],
-  type: ''
+  type: 'taxi'
+};
+
+const BLANK_DESTINATION = {
+  name: '',
+  description: '',
+  pictures: []
 };
 
 function createOffersTypeList(typeList, selectefType){
@@ -84,8 +90,9 @@ function createDestinationTemplate(descriptionInfo, pictures){
   return('');
 }
 
-function createEditFormView(point, allOffers, destinationsList, destination) {
+function createEditFormView(point, allOffers, destinationsList, destination, isNewPoint) {
   const {basePrice, dateFrom, dateTo, offers, type} = point;
+
   const {name, description, pictures} = destination;
 
   const listOffers = createOffersTypeList(allOffers, type);
@@ -117,7 +124,7 @@ function createEditFormView(point, allOffers, destinationsList, destination) {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1" required>
         <datalist id="destination-list-1">
           ${destinationList}
         </datalist>
@@ -125,10 +132,10 @@ function createEditFormView(point, allOffers, destinationsList, destination) {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${humanizeEditTime(dateFrom)} ${humanizeTime(dateFrom)}">
+        <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${humanizeEditTime(dateFrom)} ${humanizeTime(dateFrom)} required">
         —
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${humanizeEditTime(dateTo)} ${humanizeTime(dateTo)}">
+        <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${humanizeEditTime(dateTo)} ${humanizeTime(dateTo)} required">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -136,11 +143,12 @@ function createEditFormView(point, allOffers, destinationsList, destination) {
           <span class="visually-hidden">Price</span>
           €
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
@@ -173,7 +181,9 @@ export default class EditFormView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point = BLANK_POINT, allOffers, allDestinations, destinationsList, destination, onFormSubmit, onCancelClick, onDeleteClick}) {
+  #isNewPoint = null;
+
+  constructor({point = BLANK_POINT, allOffers, allDestinations, destinationsList, destination = BLANK_DESTINATION, onFormSubmit, onCancelClick, onDeleteClick, isNewPoint = false}) {
     super();
     this._setState(EditFormView.parsePointToState(point));
     this.#allOffers = allOffers;
@@ -184,11 +194,13 @@ export default class EditFormView extends AbstractStatefulView {
     this.#handleCancelClick = onCancelClick;
     this.#handleDeleteClick = onDeleteClick;
 
+    this.#isNewPoint = isNewPoint;
+
     this._restoreHandlers();
   }
 
   get template() {
-    return createEditFormView(this._state, this.#allOffers, this.#destinationsList, this.#destination);
+    return createEditFormView(this._state, this.#allOffers, this.#destinationsList, this.#destination, this.#isNewPoint);
   }
 
   removeElement() {
@@ -260,7 +272,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
-    const basePrice = evt.target.value >= 0 && evt.target.value !== '' ? Number(evt.target.value) : 0;
+    const basePrice = evt.target.value >= 0 || evt.target.value !== '' ? Number(evt.target.value.replace (/\D/g, '')) : Number(0);
     this._setState({
       basePrice
     });
