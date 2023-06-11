@@ -1,5 +1,5 @@
 import Observable from '../framework/observable';
-const POINT_COUNT = 10;
+import { UpdateType } from '../const';
 
 export default class PointModel extends Observable {
   #pointsApiService = null;
@@ -33,11 +33,13 @@ export default class PointModel extends Observable {
 
       this.#offers = await this.#pointsApiService.offers;
 
+
     } catch(err) {
       this.#points = [];
       this.#destinations = [];
       this.#offers = [];
     }
+    this._notify(UpdateType.INIT);
   }
 
   updatePoint(updateType, update) {

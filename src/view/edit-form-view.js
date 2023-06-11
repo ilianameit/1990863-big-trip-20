@@ -316,7 +316,7 @@ export default class EditFormView extends AbstractStatefulView {
     evt.preventDefault();
     const offers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
     this._setState({
-      offers: offers.map((offer) => Number(offer.dataset.offerId))
+      offers: offers.map((offer) => offer.dataset.offerId)
     });
   };
 
