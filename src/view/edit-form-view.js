@@ -1,5 +1,4 @@
-import { upperFirstCase } from '../utils/common.js';
-import { returnOfferType, humanizeEditTime, humanizeTime } from '../utils/point.js';
+import { returnOfferType, humanizeEditTime, humanizeTime, upperFirstCase } from '../utils/point.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';

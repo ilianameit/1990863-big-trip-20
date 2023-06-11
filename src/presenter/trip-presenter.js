@@ -28,6 +28,9 @@ export default class TripPresenter {
 
     const prevTripComponent = this.#tripComponent;
     const points = this.#points;
+    if(points.length === 0) {
+      return;
+    }
     const tripInfo = {
       price: calculatePrice(points, this.#listOffers),
       uniqDestinations: returnUniqDestinations(points, this.#listDestination),
