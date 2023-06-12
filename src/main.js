@@ -35,10 +35,13 @@ function handleNewPointButtonClick () {
   boardPresenter.createPoint();
   newPointButtonComponent.element.disabled = true;
 }
-render(newPointButtonComponent, siteHeaderTripElement, RenderPosition.BEFOREEND);
 
-tripPresenter.init();
 filterPresenter.init();
 boardPresenter.init();
 
-pointsModel.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, siteHeaderTripElement, RenderPosition.BEFOREEND);
+    tripPresenter.init();
+
+  });
