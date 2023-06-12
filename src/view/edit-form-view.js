@@ -41,10 +41,9 @@ function createDestinationList(destinations){
   return '';
 }
 
-function createOffers(type, allOffers, selectedOffers){
-  const off = returnOfferType(type, allOffers);
+function createOffers(type, allOffers, selectedOffers, offersType){
   let offersView = '';
-  off.reduce((accumulator, offer) => {
+  offersType.reduce((accumulator, offer) => {
     const isChecked = selectedOffers.includes(offer.id);
     offersView += `
       <div class="event__offer-selector">
@@ -58,6 +57,23 @@ function createOffers(type, allOffers, selectedOffers){
     `;
   },0);
   return offersView;
+}
+
+function createOffersTemplate(type, allOffers, selectedOffers) {
+  const offersType = returnOfferType(type, allOffers);
+  if(!offersType.length){
+    return '';
+  }
+  const offersOfType = createOffers(type, allOffers, selectedOffers, offersType);
+  return `
+    <section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+        ${offersOfType}
+      </div>
+    </section>
+  `;
 }
 
 function createDestinationTemplate(descriptionInfo, pictures){
@@ -74,7 +90,7 @@ function createDestinationTemplate(descriptionInfo, pictures){
       `;
     } return('');
   };
-  if(descriptionInfo !== null && descriptionInfo !== undefined){
+  if(descriptionInfo !== null && descriptionInfo !== undefined && descriptionInfo !== ''){
     return `
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -112,7 +128,7 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
   const listOffers = createOffersTypeList(allOffers, type);
   const destinationList = createDestinationList(destinationsList);
 
-  const offersOfType = createOffers(type, allOffers, offers);
+  const offersTemplate = createOffersTemplate(type, allOffers, offers);
   const destinationTemplate = createDestinationTemplate(description, pictures);
   const buttonsTemplate = createButtonsTemplate(isNewPoint);
 
@@ -165,14 +181,7 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
       ${buttonsTemplate}
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-          ${offersOfType}
-        </div>
-      </section>
-
+      ${offersTemplate}
       ${destinationTemplate}
     </section>
   </form>
@@ -243,7 +252,10 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#offerTypeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offersChangeHandler);
+    const availableOffers = this.element.querySelector('.event__available-offers');
+    if(availableOffers) {
+      availableOffers.addEventListener('change', this.#offersChangeHandler);
+    }
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.#setDatepicker();
