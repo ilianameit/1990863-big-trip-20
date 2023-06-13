@@ -24,6 +24,7 @@ const UpdateType = { //изменения маленькие. большие
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export {

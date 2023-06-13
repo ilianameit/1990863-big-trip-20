@@ -100,6 +100,10 @@ function isBasePriceEqual(priceA, priceB) {
   return (priceA === null && priceB === null) || priceA === priceB;
 }
 
+function upperFirstCase(word){
+  return (word[0].toUpperCase() + word.slice(1));
+}
+
 export {
   Format,
   humanizeDateFormat,
@@ -110,12 +114,13 @@ export {
   returnOfferType,
   returnCurrentOffers,
   getAllDestinations,
-  humanizeEditTime,
   returnDestination,
+  isDatesEqual,
+  isBasePriceEqual,
   isPointFuture,
   isPointPresent,
   isPointPast,
   durationDates,
-  isDatesEqual,
-  isBasePriceEqual
-};
+  humanizeEditTime,
+  upperFirstCase
+}

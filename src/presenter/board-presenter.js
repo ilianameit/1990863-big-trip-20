@@ -1,5 +1,6 @@
 import ListView from '../view/list-view.js';
 import SortView from '../view/sorting-view.js';
+import LoadingView from '../view/loading-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
@@ -19,6 +20,7 @@ export default class BoardPresenter {
   #listComponent = new ListView();
   #listEmptyComponent = null;
   #sortComponent = null;
+  #loadingComponent = new LoadingView();
 
   #listOffers = null;
   #listDestination = null;
@@ -27,6 +29,7 @@ export default class BoardPresenter {
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({listContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#listContainer = listContainer;
@@ -54,9 +57,6 @@ export default class BoardPresenter {
   }
 
   init() {
-    this.#listOffers = this.#pointsModel.offers;
-    this.#listDestination = this.#pointsModel.destinations;
-
     this.#renderBoard();
   }
 
@@ -98,8 +98,17 @@ export default class BoardPresenter {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
     }
   };
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
+  }
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
@@ -161,6 +170,13 @@ export default class BoardPresenter {
 
   #renderBoard(){
     const points = this.points;
+    this.#listOffers = this.#pointsModel.offers;
+    this.#listDestination = this.#pointsModel.destinations;
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
 
     if(!points.length) {
       this.#renderListEmpty();
