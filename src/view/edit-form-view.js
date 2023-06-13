@@ -9,7 +9,8 @@ const BLANK_POINT = {
   dateTo: '',
   destination: '',
   offers: [],
-  type: 'taxi'
+  type: 'taxi',
+  isFavorite: false
 };
 
 const BLANK_DESTINATION = {
