@@ -123,4 +123,4 @@ export {
   durationDates,
   humanizeEditTime,
   upperFirstCase,
-}
+};
