@@ -122,5 +122,5 @@ export {
   isPointPast,
   durationDates,
   humanizeEditTime,
-  upperFirstCase
+  upperFirstCase,
 }

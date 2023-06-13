@@ -43,4 +43,4 @@ pointsModel.init()
   .finally(() => {
     render(newPointButtonComponent, siteHeaderTripElement, RenderPosition.BEFOREEND);
     tripPresenter.init();
-});
+  });
