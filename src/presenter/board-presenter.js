@@ -1,16 +1,21 @@
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
+import PointPresenter from './point-presenter.js';
+import NewPontPresenter from './new-point-presenter.js';
 import ListView from '../view/list-view.js';
 import SortView from '../view/sorting-view.js';
 import LoadingView from '../view/loading-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
-import { remove, render, RenderPosition } from '../framework/render.js';
-import PointPresenter from './point-presenter.js';
-import NewPontPresenter from './new-point-presenter.js';
 
 import { FilterType, SortType, UpdateType, UserAction } from '../const.js';
 import { sortPointsDay, sortPointsTime, sortPointsPrice } from '../utils/sort.js';
 
 import { filter } from '../utils/filter.js';
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class BoardPresenter {
   #listContainer = null;
@@ -30,6 +35,10 @@ export default class BoardPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({listContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#listContainer = listContainer;
@@ -64,6 +73,12 @@ export default class BoardPresenter {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init();
+    if(this.#listEmptyComponent){
+      remove(this.#listEmptyComponent);
+
+      this.#renderSort();
+      render(this.#listComponent, this.#listContainer, RenderPosition.BEFOREEND);
+    }
   }
 
   #handleModeChange = () => {
@@ -71,18 +86,35 @@ export default class BoardPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = (actionType, updateType, update) => { // реагирование на действия пользователя
+  #handleViewAction = async (actionType, updateType, update) => { // реагирование на действия пользователя
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setSaving();
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch (err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#pointsModel.addPoint(updateType, update);
+        } catch (err) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setDeleting();
+        try {
+          await this.#pointsModel.deletePoint(updateType, update);
+        } catch (err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => { // реагирование на изменение модели

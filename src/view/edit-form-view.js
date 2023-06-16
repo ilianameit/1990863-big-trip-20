@@ -42,13 +42,22 @@ function createDestinationList(destinations){
   return '';
 }
 
-function createOffers(type, allOffers, selectedOffers, offersType){
+function createOffers(type, allOffers, selectedOffers, offersType, isDisabled){
   let offersView = '';
   offersType.reduce((accumulator, offer) => {
     const isChecked = selectedOffers.includes(offer.id);
     offersView += `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${offer.id}"  data-offer-id="${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked ? 'checked' : ''}>
+        <input
+          class="event__offer-checkbox
+          visually-hidden"
+          id="event-offer-${type}-${offer.id}"
+          data-offer-id="${offer.id}"
+          type="checkbox"
+          name="event-offer-${offer.id}"
+          ${isChecked ? 'checked' : ''}
+          ${isDisabled ? 'disabled' : ''}
+        >
         <label class="event__offer-label" for="event-offer-${type}-${offer.id}">
           <span class="event__offer-title">${offer.title}</span>
           +€&nbsp;
@@ -60,12 +69,12 @@ function createOffers(type, allOffers, selectedOffers, offersType){
   return offersView;
 }
 
-function createOffersTemplate(type, allOffers, selectedOffers) {
+function createOffersTemplate(type, allOffers, selectedOffers, isDisabled) {
   const offersType = returnOfferType(type, allOffers);
   if(!offersType.length){
     return '';
   }
-  const offersOfType = createOffers(type, allOffers, selectedOffers, offersType);
+  const offersOfType = createOffers(type, allOffers, selectedOffers, offersType, isDisabled);
   return `
     <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -105,16 +114,16 @@ function createDestinationTemplate(descriptionInfo, pictures){
   }
   return('');
 }
-function createButtonsTemplate(isNewPoint) {
+function createButtonsTemplate(isNewPoint, isDisabled, isDeleting) {
   if(isNewPoint){
     return `
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>Cancel</button>
     `;
   } else {
     return `
-      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
 
-      <button class="event__rollup-btn" type="button">
+      <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
         <span class="visually-hidden">Open event</span>
       </button>
     `;
@@ -122,16 +131,25 @@ function createButtonsTemplate(isNewPoint) {
 }
 
 function createEditFormView(point, allOffers, destinationsList, destination, isNewPoint) {
-  const {basePrice, dateFrom, dateTo, offers, type} = point;
+  const {
+    basePrice,
+    dateFrom,
+    dateTo,
+    offers,
+    type,
+    isDisabled,
+    isSaving,
+    isDeleting,
+  } = point;
 
   const {name, description, pictures} = destination;
 
   const listOffers = createOffersTypeList(allOffers, type);
   const destinationList = createDestinationList(destinationsList);
 
-  const offersTemplate = createOffersTemplate(type, allOffers, offers);
+  const offersTemplate = createOffersTemplate(type, allOffers, offers, isDisabled);
   const destinationTemplate = createDestinationTemplate(description, pictures);
-  const buttonsTemplate = createButtonsTemplate(isNewPoint);
+  const buttonsTemplate = createButtonsTemplate(isNewPoint, isDisabled, isDeleting);
 
   return `
   <li class="trip-events__item">
@@ -142,7 +160,7 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" src="img/icons/${type}.png" alt="Event type icon" width="17" height="17">
         </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+        <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
         <div class="event__type-list">
           <fieldset class="event__type-group">
@@ -156,7 +174,7 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1" required>
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1" required ${isDisabled ? 'disabled' : ''}>
         <datalist id="destination-list-1">
           ${destinationList}
         </datalist>
@@ -164,10 +182,10 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${humanizeEditTime(dateFrom)}${humanizeTime(dateFrom)}" required>
+        <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${humanizeEditTime(dateFrom)}${humanizeTime(dateFrom)}" required  ${isDisabled ? 'disabled' : ''}>
         —
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${humanizeEditTime(dateTo)}${humanizeTime(dateTo)}" required>
+        <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${humanizeEditTime(dateTo)}${humanizeTime(dateTo)}" required ${isDisabled ? 'disabled' : ''}>
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -175,10 +193,10 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
           <span class="visually-hidden">Price</span>
           €
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
       ${buttonsTemplate}
     </header>
     <section class="event__details">
@@ -377,10 +395,18 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
   }
 
   static parseStateToPoint(state) {
-    return {...state};
+    const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+    return point;
   }
 }
