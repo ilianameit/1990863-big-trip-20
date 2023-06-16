@@ -114,13 +114,13 @@ export {
   returnOfferType,
   returnCurrentOffers,
   getAllDestinations,
-  humanizeEditTime,
   returnDestination,
+  isDatesEqual,
+  isBasePriceEqual,
   isPointFuture,
   isPointPresent,
   isPointPast,
   durationDates,
-  isDatesEqual,
-  isBasePriceEqual,
-  upperFirstCase
+  humanizeEditTime,
+  upperFirstCase,
 };

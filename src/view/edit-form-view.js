@@ -272,9 +272,11 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
     const availableOffers = this.element.querySelector('.event__available-offers');
+
     if(availableOffers) {
       availableOffers.addEventListener('change', this.#offersChangeHandler);
     }
+
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.#setDatepicker();

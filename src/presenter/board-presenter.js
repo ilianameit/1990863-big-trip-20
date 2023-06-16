@@ -202,7 +202,6 @@ export default class BoardPresenter {
 
   #renderBoard(){
     const points = this.points;
-
     this.#listOffers = this.#pointsModel.offers;
     this.#listDestination = this.#pointsModel.destinations;
 

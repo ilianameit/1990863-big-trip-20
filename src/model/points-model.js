@@ -59,7 +59,6 @@ export default class PointModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t update point');
     }
-
   }
 
   async addPoint(updateType, update) {
@@ -108,5 +107,4 @@ export default class PointModel extends Observable {
 
     return adaptedPoint;
   }
-
 }
