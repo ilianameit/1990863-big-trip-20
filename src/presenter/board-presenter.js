@@ -73,10 +73,9 @@ export default class BoardPresenter {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init();
-    if(this.#listEmptyComponent){
+    if(!this.points.length){
       remove(this.#listEmptyComponent);
-
-      this.#renderSort();
+      //this.#renderSort();
       render(this.#listComponent, this.#listContainer, RenderPosition.BEFOREEND);
     }
   }
@@ -106,6 +105,7 @@ export default class BoardPresenter {
         }
         break;
       case UserAction.DELETE_POINT:
+
         this.#pointPresenters.get(update.id).setDeleting();
         try {
           await this.#pointsModel.deletePoint(updateType, update);
@@ -212,6 +212,7 @@ export default class BoardPresenter {
     }
 
     if(!points.length) {
+      remove(this.#sortComponent);
       this.#renderListEmpty();
       return;
     }

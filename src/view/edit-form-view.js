@@ -1,4 +1,4 @@
-import { returnOfferType, humanizeEditTime, humanizeTime, upperFirstCase } from '../utils/point.js';
+import { returnOfferType, humanizeEditTime, humanizeTime, upperFirstCase, getAllDestinations, returnDestination } from '../utils/point.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -11,12 +11,6 @@ const BLANK_POINT = {
   offers: [],
   type: 'taxi',
   isFavorite: false
-};
-
-const BLANK_DESTINATION = {
-  name: '',
-  description: '',
-  pictures: []
 };
 
 function createOffersTypeList(typeList, selectefType){
@@ -130,19 +124,21 @@ function createButtonsTemplate(isNewPoint, isDisabled, isDeleting) {
   }
 }
 
-function createEditFormView(point, allOffers, destinationsList, destination, isNewPoint) {
+function createEditFormView(point, allOffers, allDestinations, isNewPoint) {
   const {
     basePrice,
     dateFrom,
     dateTo,
     offers,
     type,
+    destination,
     isDisabled,
     isSaving,
     isDeleting,
   } = point;
-
-  const {name, description, pictures} = destination;
+  const destinationsList = getAllDestinations(allDestinations);
+  const destinationInfo = returnDestination(destination, allDestinations);
+  const {name, description, pictures} = destinationInfo;
 
   const listOffers = createOffersTypeList(allOffers, type);
   const destinationList = createDestinationList(destinationsList);
@@ -174,7 +170,7 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1" required ${isDisabled ? 'disabled' : ''}>
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name !== null && name !== undefined && name !== '' ? name : ''}" list="destination-list-1" required ${isDisabled ? 'disabled' : ''}>
         <datalist id="destination-list-1">
           ${destinationList}
         </datalist>
@@ -210,25 +206,24 @@ function createEditFormView(point, allOffers, destinationsList, destination, isN
 
 export default class EditFormView extends AbstractStatefulView {
   #allOffers = null;
-  #destinationsList = null;
+  #allDestinations = null;
+
   #handleFormSubmit = null;
   #handleCancelClick = null;
   #handleDeleteClick = null;
-  #destination = null;
-  #allDestinations = null;
+
 
   #datepickerFrom = null;
   #datepickerTo = null;
 
   #isNewPoint = null;
 
-  constructor({point = BLANK_POINT, allOffers, allDestinations, destinationsList, destination = BLANK_DESTINATION, onFormSubmit, onCancelClick, onDeleteClick, isNewPoint = false}) {
+  constructor({point = BLANK_POINT, allOffers, allDestinations, onFormSubmit, onCancelClick, onDeleteClick, isNewPoint = false}) {
     super();
     this._setState(EditFormView.parsePointToState(point));
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
-    this.#destinationsList = destinationsList;
-    this.#destination = destination;
+
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCancelClick = onCancelClick;
     this.#handleDeleteClick = onDeleteClick;
@@ -236,10 +231,11 @@ export default class EditFormView extends AbstractStatefulView {
     this.#isNewPoint = isNewPoint;
 
     this._restoreHandlers();
+
   }
 
   get template() {
-    return createEditFormView(this._state, this.#allOffers, this.#destinationsList, this.#destination, this.#isNewPoint);
+    return createEditFormView(this._state, this.#allOffers, this.#allDestinations, this.#isNewPoint);
   }
 
   removeElement() {
@@ -325,11 +321,11 @@ export default class EditFormView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     const destination = evt.target.value;
-    if(!destination || !(this.#destinationsList.includes(destination))) {
+    const destinationsList = getAllDestinations(this.#allDestinations);
+    if(!destination || !(destinationsList.includes(destination))) {
       return;
     }
     const destinationInfo = (this.#allDestinations).find(({name}) => name === destination);
-    this.#destination = destinationInfo;
     this.updateElement({
       destination: destinationInfo.id
     });

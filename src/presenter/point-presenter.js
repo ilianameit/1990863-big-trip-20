@@ -1,7 +1,7 @@
 import EditFormView from '../view/edit-form-view.js';
 import PointView from '../view/point-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { getAllDestinations, returnCurrentOffers, returnDestination, isDatesEqual, isBasePriceEqual } from '../utils/point.js';
+import { isDatesEqual, isBasePriceEqual } from '../utils/point.js';
 import { UserAction, UpdateType } from '../const.js';
 
 const Mode = {
@@ -34,28 +34,24 @@ export default class PointPresenter {
 
   init(point) {
     this.#point = point;
-
-    const destinationsList = getAllDestinations(this.#allDestinations);
-    const destination = returnDestination(this.#point.destination, this.#allDestinations);
-    const currentOffers = returnCurrentOffers(this.#point.type, this.#point.offers, this.#allOffers);
+    const allDestinations = this.#allDestinations;
+    const allOffers = this.#allOffers;
 
     const prevPointComponent = this.#pointComponent;
     const prevTaskEditComponent = this.#editPointComponent;
 
     this.#pointComponent = new PointView({
       point: this.#point,
-      currentOffers,
-      destination,
+      allDestinations,
+      allOffers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#editPointComponent = new EditFormView({
       point: this.#point,
-      allOffers: this.#allOffers,
-      allDestinations: this.#allDestinations,
-      destinationsList,
-      destination,
+      allOffers,
+      allDestinations,
       onFormSubmit: this.#handleFormSubmit,
       onCancelClick: this.#handleCancelClick,
       onDeleteClick: this.#handleDeleteClick

@@ -1,7 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import { UpdateType, UserAction } from '../const.js';
-import { getAllDestinations } from '../utils/point.js';
 
 export default class NewPontPresenter {
   #pointListContainer = null;
@@ -25,9 +24,8 @@ export default class NewPontPresenter {
     }
     const allOffers = this.#pointsModel.offers;
     const allDestinations = this.#pointsModel.destinations;
-    const destinationsList = getAllDestinations(allDestinations);
 
-    this.#pointEditComponent = new EditFormView({allOffers, allDestinations, destinationsList, onFormSubmit: this.#handleFormSubmit, onDeleteClick: this.#handleDeleteClick, isNewPoint: true});
+    this.#pointEditComponent = new EditFormView({allOffers, allDestinations, onFormSubmit: this.#handleFormSubmit, onDeleteClick: this.#handleDeleteClick, isNewPoint: true});
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
