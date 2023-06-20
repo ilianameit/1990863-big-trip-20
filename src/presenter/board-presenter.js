@@ -75,7 +75,6 @@ export default class BoardPresenter {
     this.#newPointPresenter.init();
     if(!this.points.length){
       remove(this.#listEmptyComponent);
-      //this.#renderSort();
       render(this.#listComponent, this.#listContainer, RenderPosition.BEFOREEND);
     }
   }
@@ -85,7 +84,7 @@ export default class BoardPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (actionType, updateType, update) => { // реагирование на действия пользователя
+  #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
@@ -117,7 +116,7 @@ export default class BoardPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleModelEvent = (updateType, data) => { // реагирование на изменение модели
+  #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);

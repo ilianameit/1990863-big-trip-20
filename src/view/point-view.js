@@ -83,8 +83,6 @@ export default class PointView extends AbstractView{
       .addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event__favorite-btn')
       .addEventListener('click', this.#favoriteClickHanler);
-    //  const destination = returnDestination(this.#point.destination, this.#allDestinations);
-    //  const currentOffers = returnCurrentOffers(this.#point.type, this.#point.offers, this.#allOffers);
   }
 
   get template() {
